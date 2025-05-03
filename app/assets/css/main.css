@@ -3,6 +3,7 @@
 
 @theme static {
   /* Colors */
+
   --color-primary-50: var(--ui-color-primary-50);
   --color-primary-100: var(--ui-color-primary-100);
   --color-primary-200: var(--ui-color-primary-200);
@@ -87,35 +88,35 @@
   --color-neutral-900: var(--ui-color-neutral-900);
   --color-neutral-950: var(--ui-color-neutral-950);
 
-  /* Custom colors */
-  --color-blue-ribbon-50: #eef2ff;
-  --color-blue-ribbon-100: #dae2ff;
-  --color-blue-ribbon-200: #bcccff;
-  --color-blue-ribbon-300: #8eabff;
-  --color-blue-ribbon-400: #597eff;
-  --color-blue-ribbon-500: #3d5afe;
-  --color-blue-ribbon-600: #1d2ff3;
-  --color-blue-ribbon-700: #151be0;
-  --color-blue-ribbon-800: #1819b5;
-  --color-blue-ribbon-900: #191d8f;
-  --color-blue-ribbon-950: #141557;
+  /* Tailwind neutral color is overriden by semantic neutral above */
 
-  --color-caribbean-green-50: #eafff7;
-  --color-caribbean-green-100: #cdfee9;
-  --color-caribbean-green-200: #a0fad8;
-  --color-caribbean-green-300: #63f2c5;
-  --color-caribbean-green-400: #25e2ac;
-  --color-caribbean-green-500: #00c896;
-  --color-caribbean-green-600: #00a47b;
-  --color-caribbean-green-700: #008367;
-  --color-caribbean-green-800: #006752;
-  --color-caribbean-green-900: #005545;
-  --color-caribbean-green-950: #003028;
+  --color-red-neutral-50: #FCF8FA;
+  --color-red-neutral-100: #F8F2F4;
+  --color-red-neutral-200: #F3E7ED;
+  --color-red-neutral-300: #ECDAE2;
+  --color-red-neutral-400: #D5AEC0;
+  --color-red-neutral-500: #C186A0;
+  --color-red-neutral-600: #AA5A7E;
+  --color-red-neutral-700: #80425E;
+  --color-red-neutral-800: #542B3E;
+  --color-red-neutral-900: #2C1720;
+  --color-red-neutral-950: #140A0F;
+
+  /* Custom colors */
+
+  --color-livid-brown-50: #f6f4f5;
+  --color-livid-brown-100: #c8bcc4;
+  --color-livid-brown-200: #9a8492;
+  --color-livid-brown-300: #6d4d61;
+  --color-livid-brown-400: #441e36;
+  --color-livid-brown-500: #3c1b2f;
+  --color-livid-brown-600: #331728;
+  --color-livid-brown-700: #2a1322;
+  --color-livid-brown-800: #220f1b;
+  --color-livid-brown-900: #190b14;
+  --color-livid-brown-950: #11070d;
 
   /* Fonts */
-  --font-sans: 'Inter', sans-serif;
-}
 
-body {
-  @apply bg-neutral-100;
+  --font-sans: 'Inter', sans-serif;
 }
