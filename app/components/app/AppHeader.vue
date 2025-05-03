@@ -13,7 +13,7 @@ const links = [
 
 <template>
   <header class="container mx-auto z-50">
-    <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+    <nav class="flex items-center justify-between p-5 lg:px-8" aria-label="Global">
       <div class="flex lg:flex-1">
         <NuxtLink to="/">
           <NuxtImg
@@ -40,7 +40,7 @@ const links = [
       </div>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
         <UButton
-          to="/services"
+          to="/auth/signin"
           size="xl"
           variant="ghost"
           class="text-sm/6 font-semibold"

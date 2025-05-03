@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4,
   },
+  
   devtools: { enabled: true },
 
   modules: [
@@ -13,7 +14,12 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/eslint',
     '@vueuse/nuxt',
+    '@pinia/nuxt',
   ],
+
+  imports: {
+    dirs: ['stores'],
+  },
 
   css: [
     '~/assets/css/main.css',
@@ -42,4 +48,8 @@ export default defineNuxtConfig({
 
   // https://hub.nuxt.com/docs/getting-started/installation#options
   hub: {},
+
+  pinia: {
+    storesDirs: ['./stores'],
+  },
 })

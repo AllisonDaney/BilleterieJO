@@ -8,12 +8,14 @@ interface Props {
 
 withDefaults(defineProps<Props>(), {})
 
-const openDrawer = ref(false)
-</script>
+const appStore = useAppStore()
+</script> 
 
 <template>
-  <UDrawer v-model:open="openDrawer" direction="right" :handle="false" :ui="{ content: 'w-full max-w-full sm:w-auto sm:max-w-auto' }">
-    <slot name="trigger" />
+  <UDrawer v-model:open="appStore.isDrawerOpen" direction="right" :handle="false" :ui="{ content: 'w-full max-w-full sm:w-auto sm:max-w-auto' }">
+    <div @click="appStore.toggleDrawer(true)">
+      <slot name="trigger" />
+    </div>
 
     <template #content>
       <div class="min-w-80 w-full p-6">
@@ -28,7 +30,7 @@ const openDrawer = ref(false)
           </NuxtLink>
           <UButton
             icon="lucide-x" color="neutral" variant="ghost"
-            @click="openDrawer = false"
+            @click="appStore.toggleDrawer(false)"
           />
         </div>
         <div class="divide-y divide-gray-500/10">
@@ -38,7 +40,7 @@ const openDrawer = ref(false)
             </NuxtLink>
           </div>
           <UButton
-            to="/services"
+            to="/auth/signin"
             size="xl"
             variant="ghost"
             trailing-icon="lucide-arrow-right"
