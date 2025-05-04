@@ -12,8 +12,8 @@
           Assistez aux plus grandes compétitions sportives en toute simplicité. Choisissez votre offre, sécurisez vos billets et vivez l’émotion des JO en direct.
         </p>
         <div class="mt-10 flex items-center justify-center gap-x-6">
-          <UButton size="xl" to="/tickets">
-            Réserver maintenant
+          <UButton size="xl" to="/tickets" trailing-icon="lucide-arrow-right">
+            Voir les billets
           </UButton>
         </div>
       </div>
