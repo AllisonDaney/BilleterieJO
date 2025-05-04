@@ -1,5 +1,5 @@
 export const useAppStore = defineStore('app', {
-  state: () => ({ 
+  state: () => ({
     isDrawerOpen: false,
   }),
   actions: {
