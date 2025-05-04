@@ -9,7 +9,7 @@ interface Props {
 withDefaults(defineProps<Props>(), {})
 
 const appStore = useAppStore()
-</script> 
+</script>
 
 <template>
   <UDrawer v-model:open="appStore.isDrawerOpen" direction="right" :handle="false" :ui="{ content: 'w-full max-w-full sm:w-auto sm:max-w-auto' }">
