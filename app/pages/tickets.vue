@@ -52,15 +52,15 @@ const tickets = [
     <p class="mx-auto mt-4 max-w-2xl text-center text-md font-medium text-pretty text-gray-600 sm:text-xl/8 2xl:text-lg">
       Réservez vos billets pour les Jeux Olympiques 2024 selon vos envies. Que vous veniez seul, en duo ou en famille, vivez l’expérience des JO avec des offres adaptées à tous.
     </p>
-    <div class="mx-auto mt-16 grid w-full grid-cols-1 items-center sm:mt-5 lg:max-w-7xl lg:grid-cols-3 gap-6 2xl:mt-20">
-      <div v-for="ticket in tickets" :key="ticket.id" class="relative rounded-3xl bg-white/80 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10">
+    <div class="mx-auto mt-16 grid w-full grid-cols-1 items-center sm:mt-5 lg:max-w-7xl lg:grid-cols-3 gap-6 2xl:mt-12 h-full">
+      <div v-for="ticket in tickets" :key="ticket.id" class="relative rounded-3xl bg-white/80 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10 h-full">
         <h3 id="tier-enterprise" class="text-base/7 font-semibold text-indigo-400">
           {{ ticket.name }}
         </h3>
         <p class="mt-4 flex items-baseline gap-x-2">
           <span class="text-5xl font-semibold tracking-tight text-gray-900">{{ ticket.price }} €</span>
         </p>
-        <p class="mt-6 text-base/7 text-gray-600">
+        <p class="mt-6 text-base/7 text-gray-600 h-14">
           {{ ticket.description }}
         </p>
         <ul role="list" class="mt-8 space-y-3 text-sm/6 text-gray-600 sm:mt-10">
@@ -71,7 +71,7 @@ const tickets = [
             {{ item }}
           </li>
         </ul>
-        <UButton size="xl" to="/tickets" block class="sm:mt-10">
+        <UButton size="xl" to="/tickets" block class="mt-10">
           Réserver maintenant
         </UButton>
       </div>
