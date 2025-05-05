@@ -3,6 +3,8 @@ definePageMeta({
   layout: 'default-blank',
 })
 
+const { errorToast, successToast } = useCustomToast()
+
 const formState = reactive<SchemaSignupForm>({
   firstname: '',
   lastname: '',
@@ -19,15 +21,17 @@ async function handleSubmit() {
     }
 
     isLoadingForm.value = true
-    const { data: ping } = await useFetch('/api/auth/signup', {
+    
+    await $fetch('/api/auth/signup', {
       method: 'POST',
       body: formState,
     })
 
-    console.log(ping.value)
+    successToast('Inscription réussie.')
+    navigateTo('/auth/signin')
   }
-  catch (error) {
-    console.error(error)
+  catch (e: any) {
+    errorToast(e.data.message ?? 'Une erreur inattendue est survenue.')
   }
   finally {
     isLoadingForm.value = false
@@ -50,7 +54,9 @@ async function handleSubmit() {
         <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
           Créer un compte
         </h1>
-        <UForm class="space-y-4 md:space-y-6" :schema="schemaSignupForm" :state="formState" @submit="handleSubmit">
+        <UForm
+          class="space-y-4 md:space-y-6" :schema="schemaSignupForm" :state="formState" @submit="handleSubmit"
+        >
           <UFormField name="firstname" label="Prénom" size="xl" required>
             <UInput v-model="formState.firstname" class="w-full" placeholder="Prénom" />
           </UFormField>
