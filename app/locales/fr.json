@@ -1,1 +1,9 @@
-{}
+{
+  "form": {
+    "auth": {
+      "errors": {
+        "confirmPassword": "Les mots de passe ne correspondent pas"
+      }
+    }
+  }
+}
