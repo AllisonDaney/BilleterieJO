@@ -3,17 +3,40 @@ definePageMeta({
   layout: 'default-blank',
 })
 
+const { errorToast, successToast } = useCustomToast()
+    const { token, isLogged } = useAuth()
+
 const formState = reactive<SchemaSigninForm>({
   email: '',
   password: '',
 })
+const isLoadingForm = ref(false)
 
 async function handleSubmit() {
-  if (!schemaSigninForm.safeParse(formState)) {
-    return
-  }
+  try {
+    if (!schemaSignupForm.safeParse(formState)) {
+      return
+    }
 
-  console.log(formState)
+    isLoadingForm.value = true
+    
+    const v = await $fetch('/api/auth/signin', {
+      method: 'POST',
+      body: formState,
+    })
+
+    token.value = v.token
+    isLogged.value = 'true'
+
+    successToast('Connexion réussie.')
+    navigateTo('/')
+  }
+  catch (e: any) {
+    errorToast(e.data.message ?? 'Une erreur inattendue est survenue.')
+  }
+  finally {
+    isLoadingForm.value = false
+  }
 }
 </script>
 
@@ -34,17 +57,17 @@ async function handleSubmit() {
         </h1>
         <UForm class="space-y-4 md:space-y-6" :schema="schemaSigninForm" :state="formState" @submit="handleSubmit">
           <UFormField name="email" label="Email" size="xl" required>
-            <UInput class="w-full" type="email" placeholder="name@company.com" />
+            <UInput v-model="formState.email" class="w-full" type="email" placeholder="name@company.com" />
           </UFormField>
           <UFormField name="password" label="Mot de passe" size="xl" required>
-            <UInput class="w-full" type="password" placeholder="••••••••" />
+            <UInput v-model="formState.password" class="w-full" type="password" placeholder="••••••••" />
           </UFormField>
           <div class="flex items-center justify-end">
             <NuxtLink to="/auth/forgot-password" class="text-sm font-medium text-primary-600 hover:underline">
               Mot de passe oublié ?
             </NuxtLink>
           </div>
-          <UButton type="submit" block size="xl">
+          <UButton type="submit" block size="xl" :loading="isLoadingForm">
             Se connecter
           </UButton>
           <p class="text-sm font-light text-gray-500">

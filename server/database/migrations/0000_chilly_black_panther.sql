@@ -1,17 +1,19 @@
 CREATE TABLE "roles" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" text NOT NULL,
-	CONSTRAINT "roles_name_unique" UNIQUE("name")
+	"slug" text NOT NULL,
+	CONSTRAINT "roles_name_unique" UNIQUE("name"),
+	CONSTRAINT "roles_slug_unique" UNIQUE("slug")
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"firstname" text NOT NULL,
 	"lastname" text NOT NULL,
 	"email" text NOT NULL,
 	"password" text NOT NULL,
 	"security_key" text NOT NULL,
-	"role_id" integer NOT NULL,
+	"role_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
