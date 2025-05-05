@@ -1,5 +1,13 @@
 <script setup lang="ts">
-const { afterEach } = useRouter()
+const { afterEach, beforeEach } = useRouter()
+
+beforeEach(() => {
+  const token = useCookie('token')
+  
+  if (token.value) {
+    useAppStore().toggleDrawer(false)
+  }
+})
 
 afterEach(() => {
   useAppStore().toggleDrawer(false)
