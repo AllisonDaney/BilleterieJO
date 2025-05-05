@@ -7,7 +7,7 @@ afterEach(() => {
 </script>
 
 <template>
-  <UApp>
+  <UApp :toaster="{ position: 'top-right' }">
     <NuxtLoadingIndicator color="var(--ui-color-primary-500)" />
     <NuxtRouteAnnouncer />
     <NuxtLayout>
