@@ -9,6 +9,7 @@ interface Props {
 withDefaults(defineProps<Props>(), {})
 
 const appStore = useAppStore()
+const { isLogged, token } = useAuth()
 </script>
 
 <template>
@@ -39,7 +40,11 @@ const appStore = useAppStore()
               {{ link.label }}
             </NuxtLink>
           </div>
+          <p v-if="isLogged">
+            {{ token?.slice(0, 10) }}
+          </p>
           <UButton
+            v-else
             to="/auth/signin"
             size="xl"
             variant="ghost"

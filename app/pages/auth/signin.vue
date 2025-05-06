@@ -4,7 +4,7 @@ definePageMeta({
 })
 
 const { errorToast, successToast } = useCustomToast()
-    const { token, isLogged } = useAuth()
+const { token, isLogged } = useAuth()
 
 const formState = reactive<SchemaSigninForm>({
   email: '',
@@ -19,7 +19,7 @@ async function handleSubmit() {
     }
 
     isLoadingForm.value = true
-    
+
     const v = await $fetch('/api/auth/signin', {
       method: 'POST',
       body: formState,

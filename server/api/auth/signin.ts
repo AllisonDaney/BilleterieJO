@@ -1,7 +1,8 @@
-import bcrypt from "bcryptjs"
-import { eq } from "drizzle-orm"
-import { users } from "~~/server/database/schema/users"
-import jwt from 'jsonwebtoken'
+import process from 'node:process'
+import bcrypt from 'bcryptjs'
+import { eq } from 'drizzle-orm'
+import * as jose from 'jose'
+import { users } from '~~/server/database/schema/users'
 
 export default eventHandler(async (event) => {
   const { db, client } = useDrizzle()
@@ -21,9 +22,15 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const token = jwt.sign({
-    id: user.id,
-  }, process.env.NUXT_JWT_SECRET ?? '', { expiresIn: '1d' })
+  const secret = new TextEncoder().encode(process.env.NUXT_JWT_SECRET ?? '')
+
+  const token = await new jose.SignJWT({ 'urn:example:claim': true })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setIssuer('billeterie-jo')
+    .setAudience('api-billeterie-jo')
+    .setExpirationTime('1d')
+    .sign(secret)
 
   event.waitUntil(client.end())
 

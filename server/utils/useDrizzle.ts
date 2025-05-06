@@ -1,4 +1,5 @@
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
+import process from 'node:process'
 import { sql } from 'drizzle-orm'
 import { PgTable } from 'drizzle-orm/pg-core'
 import { drizzle } from 'drizzle-orm/postgres-js'
@@ -13,7 +14,7 @@ export function useDrizzle() {
     throw createError({ statusCode: 500, statusMessage: 'Missing NUXT_POSTGRES_URL' })
   }
 
-  const client = postgres(url, { ssl: 'require' })
+  const client = postgres(url, { prepare: false })
   const db = drizzle(client, { schema })
 
   return { db, client }
@@ -36,7 +37,7 @@ export async function reset(
   db: PostgresJsDatabase<Record<string, never>>,
   ...tables: PgTable[]
 ) {
-  // @ts-ignore
+  // @ts-expect-error can't type the Symbol.Name
   const tableNames = tables.map(table => table[PgTable.Symbol.Name])
 
   if (tableNames.length === 0)
