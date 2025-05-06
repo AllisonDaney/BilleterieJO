@@ -21,7 +21,7 @@ async function handleSubmit() {
     }
 
     isLoadingForm.value = true
-    
+
     await $fetch('/api/auth/signup', {
       method: 'POST',
       body: formState,

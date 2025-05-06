@@ -3,7 +3,7 @@ const { afterEach, beforeEach } = useRouter()
 
 beforeEach(() => {
   const token = useCookie('token')
-  
+
   if (token.value) {
     useAppStore().toggleDrawer(false)
   }

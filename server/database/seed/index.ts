@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { useDrizzleToSeed } from '../../utils/useDrizzle'
 import { resetRoles, seedRoles } from './roles'
 
@@ -13,7 +14,7 @@ async function main() {
 
 main()
   .then(() => {
-    console.log('✅ Tous les seeds terminés')
+    console.warn('✅ Tous les seeds terminés')
     process.exit(0)
   })
   .catch((err) => {

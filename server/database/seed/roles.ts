@@ -8,11 +8,11 @@ export async function seedRoles(db: any) {
     { name: 'Utilisateur', slug: 'user' },
   ]).onConflictDoNothing()
 
-  console.log('✅ Roles seedé')
+  console.warn('✅ Roles seedé')
 }
 
 export async function resetRoles(db: any) {
   await reset(db, roles)
 
-  console.log('✅ Roles reseté')
+  console.warn('✅ Roles reseté')
 }

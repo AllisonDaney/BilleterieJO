@@ -1,4 +1,4 @@
-import { integer, pgTable, uuid, text, timestamp } from 'drizzle-orm/pg-core'
+import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { roles } from './roles'
 
 export const users = pgTable('users', {
@@ -11,3 +11,6 @@ export const users = pgTable('users', {
   roleId: uuid('role_id').references(() => roles.id).notNull(),
   createdAt: timestamp('created_at').defaultNow(),
 })
+
+export type InsertUser = typeof users.$inferInsert
+export type SelectUser = typeof users.$inferSelect
