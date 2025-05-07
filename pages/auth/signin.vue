@@ -29,7 +29,7 @@ async function handleSubmit() {
     const authToken = useCookie('auth.token')
     authToken.value = v.token
 
-    Object.assign(authStore.user, v.user)
+    authStore.setUser(v.user)
 
     successToast('Connexion réussie.')
     navigateTo('/')

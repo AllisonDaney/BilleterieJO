@@ -3,7 +3,6 @@ export default defineNuxtRouteMiddleware(async () => {
     const token = useCookie('auth.token')
     const { checkIfTokenStillValid } = useAuth()
     const authStore = useAuthStore()
-    const { isLogged } = storeToRefs(authStore)
 
     if (!token.value) {
       return
@@ -16,21 +15,21 @@ export default defineNuxtRouteMiddleware(async () => {
       return
     }
 
-    if (!isLogged.value && !authStore.user.id) {
+    if (!authStore.isLogged && authStore.user?.id) {
       const { data } = await useFetch('/api/auth/me', {
         headers: {
           Authorization: `Bearer ${token.value}`,
         },
       })
 
-      const user = data.value?.user
+      const userData = data.value?.user
 
-      if (!user) {
+      if (!userData) {
         authStore.logout(false)
         return
       }
 
-      Object.assign(authStore.user, user)
+      authStore.setUser(userData)
     }
   }
 })

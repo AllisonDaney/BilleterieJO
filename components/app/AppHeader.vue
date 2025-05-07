@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-const { isLogged, user, logout } = useAuthStore()
+import type { DropdownMenuItem } from '@nuxt/ui'
+
+const authStore = useAuthStore()
 
 const links = [
   {
@@ -11,6 +13,16 @@ const links = [
     to: '/tickets',
   },
 ]
+
+const items = ref<DropdownMenuItem[]>([
+  {
+    label: 'Déconnexion',
+    icon: 'lucide-log-out',
+    onSelect: () => authStore.logout(),
+  },
+])
+
+const user = computed(() => authStore.user)
 </script>
 
 <template>
@@ -41,9 +53,29 @@ const links = [
         </NuxtLink>
       </div>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-        <p v-if="isLogged" @click="logout(false)">
-          {{ user.firstname }} <span class="uppercase">{{ user.lastname }}</span>
-        </p>
+        <UDropdownMenu
+          v-if="authStore.isLogged && user" :items="items"
+          :content="{
+            align: 'start',
+            side: 'bottom',
+            sideOffset: 8,
+          }"
+          :ui="{
+            content: 'w-48',
+          }"
+        >
+          <div class="flex items-center gap-4 cursor-pointer">
+            <UAvatar
+              icon="i-lucide-image" size="md" :ui="{
+                root: 'bg-neutral-200',
+              }"
+            />
+            <p>
+              {{ user.firstname }} <span class="uppercase">{{ user.lastname }}</span>
+            </p>
+          </div>
+        </UDropdownMenu>
+
         <UButton
           v-else
           to="/auth/signin"
