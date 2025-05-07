@@ -8,7 +8,9 @@ import { schema } from '~~/server/database/schema'
 import 'dotenv/config'
 
 export function useDrizzle() {
-  const url = process.env.NUXT_POSTGRES_URL
+  const config = useRuntimeConfig()
+
+  const url = config.private.NUXT_POSTGRES_URL
 
   if (!url) {
     throw createError({ statusCode: 500, statusMessage: 'Missing NUXT_POSTGRES_URL' })

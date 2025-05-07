@@ -9,7 +9,7 @@ interface Props {
 withDefaults(defineProps<Props>(), {})
 
 const appStore = useAppStore()
-const { isLogged, token } = useAuth()
+const { isLogged, user, logout } = useAuthStore()
 </script>
 
 <template>
@@ -40,8 +40,8 @@ const { isLogged, token } = useAuth()
               {{ link.label }}
             </NuxtLink>
           </div>
-          <p v-if="isLogged">
-            {{ token?.slice(0, 10) }}
+          <p v-if="isLogged" @click="logout()">
+            {{ user.firstname }} <span class="uppercase">{{ user.lastname }}</span>
           </p>
           <UButton
             v-else

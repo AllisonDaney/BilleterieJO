@@ -1,4 +1,3 @@
-import process from 'node:process'
 import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
 import * as jose from 'jose'
@@ -6,6 +5,7 @@ import { users } from '~~/server/database/schema/users'
 
 export default eventHandler(async (event) => {
   const { db, client } = useDrizzle()
+  const config = useRuntimeConfig()
 
   const formState: SchemaSigninForm = await readBody(event)
 
@@ -22,9 +22,9 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const secret = new TextEncoder().encode(process.env.NUXT_JWT_SECRET ?? '')
+  const secret = new TextEncoder().encode(config.private.NUXT_JWT_SECRET)
 
-  const token = await new jose.SignJWT({ 'urn:example:claim': true })
+  const token = await new jose.SignJWT({ id: user.id })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setIssuer('billeterie-jo')
@@ -34,9 +34,12 @@ export default eventHandler(async (event) => {
 
   event.waitUntil(client.end())
 
+  const { password, securityKey, ...safeUser } = user
+
   return {
     statusCode: 200,
     statusMessage: 'Connexion réussie.',
     token,
+    user: safeUser,
   }
 })
