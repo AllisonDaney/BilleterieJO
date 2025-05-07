@@ -8,8 +8,8 @@ const { errorToast, successToast } = useCustomToast()
 const authStore = useAuthStore()
 
 const formState = reactive<SchemaSigninForm>({
-  email: 'azezaeza@azzeae.fr',
-  password: 'azezaeza@azzeae.fr',
+  email: '',
+  password: '',
 })
 const isLoadingForm = ref(false)
 
