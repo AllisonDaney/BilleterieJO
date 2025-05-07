@@ -4,11 +4,12 @@ definePageMeta({
 })
 
 const { errorToast, successToast } = useCustomToast()
-const { token, isLogged } = useAuth()
+
+const authStore = useAuthStore()
 
 const formState = reactive<SchemaSigninForm>({
-  email: '',
-  password: '',
+  email: 'azezaeza@azzeae.fr',
+  password: 'azezaeza@azzeae.fr',
 })
 const isLoadingForm = ref(false)
 
@@ -25,8 +26,10 @@ async function handleSubmit() {
       body: formState,
     })
 
-    token.value = v.token
-    isLogged.value = 'true'
+    const authToken = useCookie('auth.token')
+    authToken.value = v.token
+
+    Object.assign(authStore.user, v.user)
 
     successToast('Connexion réussie.')
     navigateTo('/')

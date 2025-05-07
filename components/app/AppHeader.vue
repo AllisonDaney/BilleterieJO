@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { isLogged, token } = useAuth()
+const { isLogged, user, logout } = useAuthStore()
 
 const links = [
   {
@@ -41,8 +41,8 @@ const links = [
         </NuxtLink>
       </div>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-        <p v-if="isLogged">
-          {{ token?.slice(0, 10) }}
+        <p v-if="isLogged" @click="logout(false)">
+          {{ user.firstname }} <span class="uppercase">{{ user.lastname }}</span>
         </p>
         <UButton
           v-else

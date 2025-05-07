@@ -1,13 +1,5 @@
 <script setup lang="ts">
-const { afterEach, beforeEach } = useRouter()
-
-beforeEach(() => {
-  const token = useCookie('token')
-
-  if (token.value) {
-    useAppStore().toggleDrawer(false)
-  }
-})
+const { afterEach } = useRouter()
 
 afterEach(() => {
   useAppStore().toggleDrawer(false)
@@ -15,7 +7,7 @@ afterEach(() => {
 </script>
 
 <template>
-  <UApp :toaster="{ position: 'top-right' }">
+  <UApp :toaster="{ position: 'top-right', duration: 3000 }">
     <NuxtLoadingIndicator color="var(--ui-color-primary-500)" />
     <NuxtRouteAnnouncer />
     <NuxtLayout>

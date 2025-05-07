@@ -1,4 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import process from 'node:process'
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   future: {
@@ -51,5 +52,12 @@ export default defineNuxtConfig({
 
   pinia: {
     storesDirs: ['./stores'],
+  },
+
+  runtimeConfig: {
+    private: {
+      NUXT_POSTGRES_URL: process.env.NUXT_POSTGRES_URL || '',
+      NUXT_JWT_SECRET: process.env.NUXT_JWT_SECRET || '',
+    },
   },
 })
