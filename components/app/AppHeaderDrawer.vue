@@ -4,6 +4,7 @@ interface Props {
     label: string
     to: string
   }[]
+  logoLinkTo: string
 }
 
 withDefaults(defineProps<Props>(), {})
@@ -23,7 +24,7 @@ const user = computed(() => authStore.user)
     <template #content>
       <div class="flex flex-col w-full m-6">
         <div class="flex items-center justify-between">
-          <NuxtLink to="/">
+          <NuxtLink :to="logoLinkTo">
             <NuxtImg
               src="/img/logo.svg"
               alt="Billeterie JO"

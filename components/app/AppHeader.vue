@@ -3,17 +3,28 @@ import type { DropdownMenuItem } from '@nuxt/ui'
 
 const authStore = useAuthStore()
 
-const links = [
+const links = ref([
   {
     label: 'Présentation',
     to: '/',
+    visible: ['user', undefined].includes(authStore.user?.role.slug),
   },
   {
     label: 'Billeterie',
     to: '/tickets',
+    visible: ['user', undefined].includes(authStore.user?.role.slug),
   },
-]
-
+  {
+    label: 'Administration utilisateurs',
+    to: '/admin/users',
+    visible: ['admin', 'employee'].includes(authStore.user?.role.slug ?? ''),
+  },
+  {
+    label: 'Administration employés',
+    to: '/admin/employees',
+    visible: ['admin'].includes(authStore.user?.role.slug ?? ''),
+  },
+])
 const items = ref<DropdownMenuItem[]>([
   {
     label: 'Déconnexion',
@@ -23,13 +34,20 @@ const items = ref<DropdownMenuItem[]>([
 ])
 
 const user = computed(() => authStore.user)
+const visibleLinks = computed(() => links.value.filter(link => link.visible))
+const logoLinkTo = computed(() => {
+  if (['admin', 'employee'].includes(authStore.user?.role.slug ?? '')) {
+    return '/admin/users'
+  }
+  return '/'
+})
 </script>
 
 <template>
   <header class="container mx-auto z-50">
     <nav class="flex items-center justify-between p-5 lg:px-8" aria-label="Global">
       <div class="flex lg:flex-1">
-        <NuxtLink to="/">
+        <NuxtLink :to="logoLinkTo">
           <NuxtImg
             src="/img/logo.svg"
             alt="Billeterie JO"
@@ -39,7 +57,7 @@ const user = computed(() => authStore.user)
         </NuxtLink>
       </div>
       <div class="flex lg:hidden">
-        <AppHeaderDrawer :links="links">
+        <AppHeaderDrawer :links="visibleLinks" :logo-link-to="logoLinkTo">
           <template #trigger>
             <UButton
               icon="lucide-menu" color="neutral" variant="ghost" size="xl"
@@ -48,7 +66,7 @@ const user = computed(() => authStore.user)
         </AppHeaderDrawer>
       </div>
       <div class="hidden lg:flex lg:gap-x-12">
-        <NuxtLink v-for="link in links" :key="link.to" :to="link.to" active-class="text-primary-500 font-bold" class="text-sm/6 font-semibold">
+        <NuxtLink v-for="link in visibleLinks" :key="link.to" :to="link.to" active-class="text-primary-500 font-bold" class="text-sm/6 font-semibold">
           {{ link.label }}
         </NuxtLink>
       </div>
