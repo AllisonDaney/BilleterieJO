@@ -1,4 +1,8 @@
-<script setup>
+<script setup lang="ts">
+definePageMeta({
+  layout: 'default-flex',
+})
+
 const tickets = [
   {
     id: 1,

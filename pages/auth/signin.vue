@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { SelectSafeUser } from '~/server/database/schema/users'
+
 definePageMeta({
   layout: 'default-blank',
 })
@@ -29,10 +31,16 @@ async function handleSubmit() {
     const authToken = useCookie('auth.token')
     authToken.value = v.token
 
-    authStore.setUser(v.user)
+    authStore.setUser(v.user as SelectSafeUser)
 
     successToast('Connexion réussie.')
-    navigateTo('/')
+
+    if (['admin', 'employee'].includes(v.user.role.slug)) {
+      navigateTo('/admin/users')
+    }
+    else {
+      navigateTo('/')
+    }
   }
   catch (e: any) {
     errorToast(e.data.message ?? 'Une erreur inattendue est survenue.')
