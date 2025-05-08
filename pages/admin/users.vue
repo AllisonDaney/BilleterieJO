@@ -34,6 +34,8 @@ const tableHeight = ref(100)
 const usersLength = ref(0)
 const skip = ref(0)
 const users = ref<SelectSafeUser[]>([])
+const userRowHeight = ref(52)
+const initialTableHeightCalculation = ref(false)
 
 const { data, status, execute } = await useFetch(
   '/api/users',
@@ -41,6 +43,15 @@ const { data, status, execute } = await useFetch(
     key: 'table-users-infinite-scroll',
     params: { skip, limit, roleSlug: 'user' },
     transform: (data?: UserResponse) => {
+      if (!initialTableHeightCalculation.value) {
+        tableHeight.value = (tableContainer.value?.clientHeight || 100) - 40
+
+        if ((data?.users?.length || 0) * userRowHeight.value < tableHeight.value) {
+          tableHeight.value = (data?.users?.length || 0) * userRowHeight.value + 48
+        }
+      }
+
+      initialTableHeightCalculation.value = true
       usersLength.value = data?.total || 0
       return data?.users
     },
@@ -52,8 +63,6 @@ const { data, status, execute } = await useFetch(
 execute()
 
 onMounted(() => {
-  tableHeight.value = tableContainer.value?.clientHeight || 100
-
   useInfiniteScroll(
     table.value?.$el,
     () => {
@@ -92,9 +101,9 @@ watch(data, () => {
         class="flex-1 bg-white"
         :style="{ height: `${tableHeight}px` }"
       />
+      <p class="mt-4 text-right">
+        Affichage de {{ users.length }} utilisateurs sur {{ usersLength }}
+      </p>
     </div>
-    <p class="mt-4 ml-auto">
-      Affichage de {{ users.length }} utilisateurs sur {{ usersLength }}
-    </p>
   </div>
 </template>
