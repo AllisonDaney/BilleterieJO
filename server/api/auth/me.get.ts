@@ -10,6 +10,14 @@ export default eventHandler(async (event) => {
       password: false,
       securityKey: false,
     },
+    with: {
+      role: {
+        columns: {
+          name: true,
+          slug: true,
+        },
+      },
+    },
   })
 
   event.waitUntil(client.end())

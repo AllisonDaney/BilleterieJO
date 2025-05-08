@@ -11,6 +11,14 @@ export default eventHandler(async (event) => {
 
   const user = await db.query.users.findFirst({
     where: eq(users.email, formState.email),
+    with: {
+      role: {
+        columns: {
+          name: true,
+          slug: true,
+        },
+      },
+    },
   })
 
   const isPasswordValid = await bcrypt.compare(formState.password, user?.password ?? '')
