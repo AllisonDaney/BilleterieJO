@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col min-h-screen overflow-hidden">
+  <div class="flex flex-col min-h-screen">
     <AppHeader />
 
-    <main class="flex-1 flex items-center justify-center">
+    <main class="flex-1 container mt-4 mx-auto flex">
       <slot />
     </main>
 
