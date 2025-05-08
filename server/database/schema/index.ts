@@ -1,7 +1,9 @@
-import { roles } from './roles'
-import { users } from './users'
+import { roles, rolesRelations } from './roles'
+import { users, usersRelations } from './users'
 
 export const schema = {
   users,
   roles,
+  usersRelations,
+  rolesRelations,
 }
