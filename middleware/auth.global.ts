@@ -15,7 +15,7 @@ export default defineNuxtRouteMiddleware(async () => {
       return
     }
 
-    if (!authStore.isLogged && authStore.user?.id) {
+    if (!authStore.isLogged && !authStore.user?.id) {
       const { data } = await useFetch('/api/auth/me', {
         headers: {
           Authorization: `Bearer ${token.value}`,
