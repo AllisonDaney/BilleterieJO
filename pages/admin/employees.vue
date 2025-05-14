@@ -87,7 +87,7 @@ watch(data, () => {
 </script>
 
 <template>
-  <div class="flex-1 flex flex-col">
+  <div class="flex-1 flex flex-col mx-4">
     <h1 class="text-2xl font-bold mt-4">
       Administration utilisateurs
     </h1>
