@@ -1,46 +1,74 @@
 <script setup lang="ts">
+import { loadStripe } from '@stripe/stripe-js'
+
 definePageMeta({
   layout: 'default-flex',
 })
 
-const tickets = [
-  {
-    id: 1,
-    name: 'Offre Solo',
-    price: 29,
-    description: 'Idéale pour vivre l’événement à votre rythme.',
-    list: [
-      '1 billet pour une épreuve au choix',
-      'E-ticket sécurisé',
-      'Assistance par email',
-      'Accès aux infos en temps réel',
-    ],
-  },
-  {
-    id: 2,
-    name: 'Offre Duo',
-    price: 55,
-    description: 'Parfait pour partager l’émotion des JO à deux.',
-    list: [
-      '2 billets pour la même épreuve',
-      'Placement côte à côte garanti',
-      'E-tickets sécurisés',
-      'Support prioritaire',
-    ],
-  },
-  {
-    id: 3,
-    name: ' Offre Familiale',
-    price: 99,
-    description: 'Conçue pour une sortie sportive en famille.',
-    list: [
-      '4 billets pour la même épreuve',
-      'Placement groupé',
-      'Cadeau souvenir officiel',
-      'Assistance dédiée',
-    ],
-  },
-]
+const { data } = await useFetch('/api/tickets')
+const authStore = useAuthStore()
+const { $fetchAuth } = useApp()
+const config = useRuntimeConfig()
+
+const stripePromise = loadStripe(config.public.NUXT_STRIPE_PUBLIC_KEY as string)
+
+const isLoadingButton = ref<{ [key: string]: boolean }>({})
+const successMessage = ref('')
+const errorMessage = ref('')
+
+const tickets = computed(() => data.value?.tickets)
+const disabledButton = computed(() => {
+  return Object.values(isLoadingButton.value).some(value => value)
+})
+
+async function handleClick(id: string) {
+  if (!authStore.isLogged) {
+    navigateTo('/auth/signin?redirectUrl=/tickets')
+  }
+  else {
+    try {
+      isLoadingButton.value[id] = true
+      const stripe = await stripePromise
+
+      const v = await $fetchAuth('/api/tickets/payment', {
+        method: 'POST',
+        body: {
+          id,
+        },
+      })
+
+      await stripe?.redirectToCheckout({
+        sessionId: v?.id ?? '',
+      })
+    }
+    catch (error) {
+      errorMessage.value = 'Une erreur est survenue lors de la réservation du billet'
+    }
+  }
+
+  isLoadingButton.value[id] = false
+}
+
+onMounted(() => {
+  const success = useRoute().query.success
+  const id = useRoute().query.id
+  const ticket = tickets.value?.find(ticket => ticket.id === id)
+
+  if (success) {
+    successMessage.value = `Billet ${ticket?.name} réservé avec succès`
+
+    navigateTo('/tickets')
+  }
+})
+
+watchEffect(() => {
+  if (tickets.value) {
+    isLoadingButton.value = tickets.value.reduce((acc: any, ticket) => {
+      acc[ticket.id] = false
+      return acc
+    }, {})
+  }
+})
 </script>
 
 <template>
@@ -56,7 +84,9 @@ const tickets = [
     <p class="mx-auto mt-4 max-w-2xl text-center text-md font-medium text-pretty text-gray-600 sm:text-xl/8 2xl:text-lg">
       Réservez vos billets pour les Jeux Olympiques 2024 selon vos envies. Que vous veniez seul, en duo ou en famille, vivez l’expérience des JO avec des offres adaptées à tous.
     </p>
-    <div class="mx-auto mt-16 grid w-full grid-cols-1 items-center sm:mt-5 lg:max-w-7xl lg:grid-cols-3 gap-6 2xl:mt-12 h-full">
+    <UAlert v-if="errorMessage" class="mx-auto max-w-3xl mt-4" :title="errorMessage" variant="subtle" color="error" icon="lucide:triangle-alert" close @update:open="errorMessage = ''" />
+    <UAlert v-if="successMessage" class="mx-auto max-w-3xl mt-4" :title="successMessage" variant="subtle" color="success" icon="lucide:check-circle" close @update:open="successMessage = ''" />
+    <div class="mx-auto mt-16 grid w-full grid-cols-1 items-center sm:mt-5 lg:max-w-7xl lg:grid-cols-3 gap-6 2xl:mt-12 h-full" :class="{ '!mt-8': errorMessage || successMessage }">
       <div v-for="ticket in tickets" :key="ticket.id" class="relative rounded-3xl bg-white/80 p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10 h-full">
         <h3 id="tier-enterprise" class="text-base/7 font-semibold text-indigo-400">
           {{ ticket.name }}
@@ -75,7 +105,7 @@ const tickets = [
             {{ item }}
           </li>
         </ul>
-        <UButton size="xl" to="/tickets" block class="mt-10">
+        <UButton size="xl" block class="mt-10" :loading="isLoadingButton[ticket.id]" :disabled="disabledButton" @click="handleClick(ticket.id)">
           Réserver maintenant
         </UButton>
       </div>
