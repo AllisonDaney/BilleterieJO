@@ -8,13 +8,19 @@ export default defineEventHandler(async (event) => {
 
   const offset = query.skip ? Number.parseInt(query.skip as string) : 0
   const limit = query.limit ? Number.parseInt(query.limit as string) : 10
+  const roleSlug = query.roleSlug ? (query.roleSlug as string) : ''
 
-  const [{ count: totalCount }] = await db.select({ count: sql<number>`count(*)` })
+  const baseUsersCountQuery = db.select({ count: sql<number>`count(*)` })
     .from(users)
     .innerJoin(roles, eq(users.roleId, roles.id))
-    .where(eq(roles.slug, query.roleSlug as string))
 
-  const usersData = await db.select({
+  if (roleSlug) {
+    baseUsersCountQuery.where(eq(roles.slug, roleSlug))
+  }
+
+  const [{ count: totalCount }] = await baseUsersCountQuery
+
+  const baseUsersQuery = db.select({
     id: users.id,
     firstname: users.firstname,
     lastname: users.lastname,
@@ -27,7 +33,12 @@ export default defineEventHandler(async (event) => {
   })
     .from(users)
     .innerJoin(roles, eq(users.roleId, roles.id))
-    .where(eq(roles.slug, query.roleSlug as string))
+
+  if (roleSlug) {
+    baseUsersQuery.where(eq(roles.slug, roleSlug))
+  }
+
+  const usersData = await baseUsersQuery
     .orderBy(asc(users.firstname))
     .limit(limit)
     .offset(offset)
