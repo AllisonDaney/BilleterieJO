@@ -1,5 +1,5 @@
-import { v2 as cloudinary } from 'cloudinary'
 import type { RuntimeConfig } from 'nuxt/schema'
+import { v2 as cloudinary } from 'cloudinary'
 
 export function useCloudinary(config: RuntimeConfig) {
   cloudinary.config({
@@ -12,13 +12,13 @@ export function useCloudinary(config: RuntimeConfig) {
     const result = await cloudinary.uploader.upload(file, {
       folder,
       public_id: publicId,
-      overwrite: true
+      overwrite: true,
     })
-  
-    return result.secure_url 
+
+    return result.secure_url
   }
 
   return {
-    uploadFile
+    uploadFile,
   }
 }
