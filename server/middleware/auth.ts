@@ -2,10 +2,18 @@ import * as jose from 'jose'
 
 export default defineEventHandler((event) => {
   const url = event.node.req.url || ''
+  const method = event.node.req.method || 'GET'
 
-  const protectedRoutes = ['/api/auth/me']
+  const protectedRoutes: Record<string, string[]> = {
+    'GET /api/users': ['admin', 'employee'],
+    'GET /api/auth/me': ['admin', 'employee', 'user'],
+    'POST /api/tickets/payment': ['user'],
+  }
 
-  if (protectedRoutes.some(path => !url.startsWith(path)))
+  const routeKey = `${method.toUpperCase()} ${url}`
+
+  const allowedRoles = protectedRoutes[routeKey]
+  if (!allowedRoles)
     return
 
   const { authorization } = getHeaders(event)
@@ -26,6 +34,13 @@ export default defineEventHandler((event) => {
     return sendError(event, createError({
       statusCode: 401,
       statusMessage: 'Unauthorized',
+    }))
+  }
+
+  if (!allowedRoles.includes(decodedToken?.role as string)) {
+    return sendError(event, createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden',
     }))
   }
 
