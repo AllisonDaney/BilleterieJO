@@ -1,12 +1,11 @@
+import crypto, { randomBytes } from 'node:crypto'
 import { eq } from 'drizzle-orm'
+import * as jose from 'jose'
 import Stripe from 'stripe'
 import { tickets } from '~/server/database/schema/tickets'
 import { users } from '~/server/database/schema/users'
-import crypto, { randomBytes } from 'node:crypto'
-import axios from 'axios'
-import { useEmail } from '~/shared/utils/useEmail'
 import { usersTickets } from '~/server/database/schema/users_tickets'
-import * as jose from 'jose'
+import { useEmail } from '~/shared/utils/useEmail'
 
 function generateTicketKey() {
   return randomBytes(32).toString('hex')
@@ -17,7 +16,7 @@ function generateTicketHash(
   ticketKey: string,
   userId: string,
   ticketId: string,
-  timestamp: number
+  timestamp: number,
 ): string {
   const data = `${userKey}:${ticketKey}:${userId}:${ticketId}:${timestamp}`
   return crypto.createHash('sha256').update(data).digest('hex')
@@ -27,7 +26,7 @@ function generateTicketPayload(
   userId: string,
   ticketId: string,
   timestamp: number,
-  hash: string
+  hash: string,
 ) {
   return { userId, ticketId, timestamp, hash }
 }
@@ -102,7 +101,7 @@ export default defineEventHandler(async (event) => {
           <p>Voici votre billet ${ticket.name} :</p>
           <img src="${qrCodeUrl}" alt="QR Code">
         `,
-      }
+      },
     )
 
     await db.insert(usersTickets).values({

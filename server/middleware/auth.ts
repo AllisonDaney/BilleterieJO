@@ -1,6 +1,8 @@
 import * as jose from 'jose'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
+  const config = useRuntimeConfig(event)
+
   const url = event.node.req.url || ''
   const method = event.node.req.method || 'GET'
 
@@ -8,6 +10,7 @@ export default defineEventHandler((event) => {
     'GET /api/users': ['admin', 'employee'],
     'GET /api/auth/me': ['admin', 'employee', 'user'],
     'POST /api/tickets/payment': ['user'],
+    'GET /api/tickets/verify': ['employee'],
   }
 
   const routeKey = `${method.toUpperCase()} ${url}`
@@ -22,6 +25,16 @@ export default defineEventHandler((event) => {
   const token = tokenStartWithBearer ? authorization?.split(' ')[1] : null
 
   if (!tokenStartWithBearer || !token) {
+    return sendError(event, createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+    }))
+  }
+
+  const secret = new TextEncoder().encode(config.private.NUXT_JWT_SECRET)
+  const isTokenValid = await jose.jwtVerify(token, secret)
+
+  if (!isTokenValid) {
     return sendError(event, createError({
       statusCode: 401,
       statusMessage: 'Unauthorized',

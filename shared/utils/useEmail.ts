@@ -1,5 +1,5 @@
-import axios from "axios"
-import type { RuntimeConfig } from "nuxt/schema"
+import type { RuntimeConfig } from 'nuxt/schema'
+import axios from 'axios'
 
 export function useEmail(config: RuntimeConfig) {
   const sendEmail = async ({ sender, to, subject, htmlContent }: { sender: { name: string, email: string }, to: { email: string, name: string }[], subject: string, htmlContent: string }) => {
@@ -17,6 +17,6 @@ export function useEmail(config: RuntimeConfig) {
   }
 
   return {
-    sendEmail
+    sendEmail,
   }
 }

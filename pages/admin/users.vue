@@ -12,6 +12,8 @@ interface UserResponse {
   limit: number
 }
 
+const { scanQRCode } = useQRCode()
+
 const columns: TableColumn<SelectSafeUser>[] = [
   {
     accessorKey: 'email',
@@ -36,7 +38,7 @@ const skip = ref(0)
 const users = ref<SelectSafeUser[]>([])
 const userRowHeight = ref(52)
 const initialTableHeightCalculation = ref(false)
-
+const isQRCodeScannerDialogOpen = ref(false)
 const { data, status, execute } = await useFetch(
   '/api/users',
   {
@@ -88,9 +90,20 @@ watch(data, () => {
 
 <template>
   <div class="flex-1 flex flex-col mx-4">
-    <h1 class="text-2xl font-bold mt-4">
-      Administration utilisateurs
-    </h1>
+    <div class="flex justify-between sm:flex-row flex-col gap-4 mt-4">
+      <h1 class="text-2xl font-bold">
+        Administration utilisateurs
+      </h1>
+      <UModal fullscreen title="Scan du QR CODE">
+        <UButton icon="lucide-qr-code" class="w-fit" @click="isQRCodeScannerDialogOpen = true">
+          Scan du QR CODE
+        </UButton>
+
+        <template #body>
+          <QRCodeScannerDialog />
+        </template>
+      </UModal>
+    </div>
     <div ref="tableContainer" class="mt-4 h-full">
       <UTable
         ref="table"
