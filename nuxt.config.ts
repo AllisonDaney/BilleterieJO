@@ -58,6 +58,15 @@ export default defineNuxtConfig({
     private: {
       NUXT_POSTGRES_URL: process.env.NUXT_POSTGRES_URL || '',
       NUXT_JWT_SECRET: process.env.NUXT_JWT_SECRET || '',
+      NUXT_STRIPE_SECRET_KEY: process.env.NUXT_STRIPE_SECRET_KEY || '',
+      NUXT_BREVO_API_KEY: process.env.NUXT_BREVO_API_KEY || '',
+      NUXT_CLOUDINARY_API_KEY: process.env.NUXT_CLOUDINARY_API_KEY || '',
+      NUXT_CLOUDINARY_API_SECRET: process.env.NUXT_CLOUDINARY_API_SECRET || '',
+      NUXT_CLOUDINARY_CLOUD_NAME: process.env.NUXT_CLOUDINARY_CLOUD_NAME || '',
+    },
+    public: {
+      NUXT_PROJECT_URL: process.env.NUXT_PROJECT_URL || '',
+      NUXT_STRIPE_PUBLIC_KEY: process.env.NUXT_STRIPE_PUBLIC_KEY || '',
     },
   },
 })
