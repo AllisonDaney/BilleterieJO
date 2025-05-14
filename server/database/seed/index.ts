@@ -1,16 +1,25 @@
 import process from 'node:process'
 import { useDrizzleToSeed } from '../../utils/useDrizzle'
 import { resetRoles, seedRoles } from './roles'
+import { resetTickets, seedTickets } from './tickets'
 import { resetUsers, seedUsers } from './users'
+
+async function resetAll(db: any) {
+  await resetRoles(db)
+  await resetUsers(db)
+  await resetTickets(db)
+
+  console.warn('✅ Tous les seeds resetés')
+}
 
 async function main() {
   const { db, client } = useDrizzleToSeed()
 
-  await resetUsers(db)
-  await resetRoles(db)
+  await resetAll(db)
 
   await seedRoles(db)
   await seedUsers(db)
+  await seedTickets(db)
 
   await client.end()
 }

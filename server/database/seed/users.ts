@@ -53,6 +53,14 @@ export async function seedUsers(db: any) {
       roleId: roleEmployee?.id ?? '',
       securityKey: crypto.randomUUID(),
     },
+    {
+      firstname: 'User',
+      lastname: 'User',
+      email: 'user@example.com',
+      password: hashedPassword,
+      roleId: roleUser?.id ?? '',
+      securityKey: crypto.randomUUID(),
+    },
     ...seedUsers,
   ]).onConflictDoNothing()
 
