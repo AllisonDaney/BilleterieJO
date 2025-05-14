@@ -1,7 +1,13 @@
+import type { SelectUser } from '~~/server/database/schema/users'
+import type { SelectRole } from '~/server/database/schema/roles'
 import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
 import * as jose from 'jose'
 import { users } from '~~/server/database/schema/users'
+
+type AuthenticatedUser = SelectUser & {
+  role: Pick<SelectRole, 'name' | 'slug'>
+}
 
 export default eventHandler(async (event) => {
   const { db, client } = useDrizzle()
@@ -19,7 +25,7 @@ export default eventHandler(async (event) => {
         },
       },
     },
-  })
+  }) as AuthenticatedUser
 
   const isPasswordValid = await bcrypt.compare(formState.password, user?.password ?? '')
 
@@ -32,7 +38,7 @@ export default eventHandler(async (event) => {
 
   const secret = new TextEncoder().encode(config.private.NUXT_JWT_SECRET)
 
-  const token = await new jose.SignJWT({ id: user.id })
+  const token = await new jose.SignJWT({ id: user.id, role: user.role.slug })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setIssuer('billeterie-jo')
