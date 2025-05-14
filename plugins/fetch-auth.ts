@@ -15,7 +15,7 @@ export default defineNuxtPlugin(() => {
 
   return {
     provide: {
-      fetchAuth,
+      $fetchAuth: fetchAuth,
     },
   }
 })

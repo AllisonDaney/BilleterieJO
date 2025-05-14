@@ -6,13 +6,25 @@ definePageMeta({
 })
 
 const { errorToast, successToast } = useCustomToast()
-
 const authStore = useAuthStore()
+const route = useRoute()
 
-const formState = reactive<SchemaSigninForm>({
-  email: '',
-  password: '',
-})
+const adminLogin = {
+  email: 'admin@example.com',
+  password: 'passwordpasswordpassword',
+}
+
+const employeeLogin = {
+  email: 'employee@example.com',
+  password: 'passwordpasswordpassword',
+}
+
+const userLogin = {
+  email: 'user@example.com',
+  password: 'passwordpasswordpassword',
+}
+
+const formState = reactive<SchemaSigninForm>(userLogin)
 const isLoadingForm = ref(false)
 
 async function handleSubmit() {
@@ -39,7 +51,7 @@ async function handleSubmit() {
       navigateTo('/admin/users')
     }
     else {
-      navigateTo('/')
+      navigateTo(route.query.redirectUrl as string ?? '/')
     }
   }
   catch (e: any) {
