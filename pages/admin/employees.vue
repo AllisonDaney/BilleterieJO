@@ -3,8 +3,6 @@ import type { TableColumn } from '@nuxt/ui'
 import type { SelectSafeUser } from '~/server/database/schema/users'
 import { useInfiniteScroll } from '@vueuse/core'
 
-const UAvatar = resolveComponent('UAvatar')
-
 interface UserResponse {
   users: SelectSafeUser[]
   total: number

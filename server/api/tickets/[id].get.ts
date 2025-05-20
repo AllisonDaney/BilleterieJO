@@ -1,5 +1,7 @@
 import { eq } from 'drizzle-orm'
+import { defineEventHandler, getRouterParam } from 'h3'
 import { tickets } from '~/server/database/schema/tickets'
+import { useDrizzle } from '~/server/utils/useDrizzle'
 
 export default defineEventHandler(async (event) => {
   const { db, client } = useDrizzle()

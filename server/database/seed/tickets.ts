@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { reset } from '../../utils/useDrizzle'
 import { tickets } from '../schema/tickets'
 
@@ -41,11 +42,15 @@ export async function seedTickets(db: any) {
     },
   ]).onConflictDoNothing()
 
-  console.warn('✅ Roles seedé')
+  if (process.env.APP_ENV !== 'test') {
+    console.warn('✅ Roles seedé')
+  }
 }
 
 export async function resetTickets(db: any) {
   await reset(db, tickets)
 
-  console.warn('✅ Tickets reseté')
+  if (process.env.APP_ENV !== 'test') {
+    console.warn('✅ Tickets reseté')
+  }
 }

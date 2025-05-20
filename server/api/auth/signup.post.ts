@@ -1,18 +1,22 @@
 import crypto from 'node:crypto'
 import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
+import { createError, defineEventHandler, readBody } from 'h3'
 import { roles } from '~~/server/database/schema/roles'
 import { users } from '~~/server/database/schema/users'
+import { useDrizzle } from '~~/server/utils/useDrizzle'
 
-export default eventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const { db, client } = useDrizzle()
 
   const formState: SchemaSignupForm = await readBody(event)
 
-  if (!schemaSignupForm.safeParse(formState)) {
+  const { success } = schemaSignupForm.safeParse(formState)
+
+  if (!success) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Les informations sont invalides.',
+      message: 'Les informations sont invalides.',
     })
   }
 
@@ -23,7 +27,7 @@ export default eventHandler(async (event) => {
   if (existingUser) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Cette adresse email est déjà utilisée.',
+      message: 'Cette adresse email est déjà utilisée.',
     })
   }
 
@@ -46,6 +50,6 @@ export default eventHandler(async (event) => {
 
   return {
     statusCode: 200,
-    statusMessage: 'Inscription réussie.',
+    message: 'Inscription réussie.',
   }
 })

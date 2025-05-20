@@ -10,10 +10,10 @@ import 'dotenv/config'
 export function useDrizzle() {
   const config = useRuntimeConfig()
 
-  const url = config.private.NUXT_POSTGRES_URL
+  const url = process.env.APP_ENV === 'test' ? process.env.NUXT_POSTGRES_TEST_URL : config.private.NUXT_POSTGRES_URL
 
   if (!url) {
-    throw createError({ statusCode: 500, statusMessage: 'Missing NUXT_POSTGRES_URL' })
+    throw createError({ statusCode: 500, message: 'Missing NUXT_POSTGRES_URL' })
   }
 
   const client = postgres(url, { prepare: false })
@@ -22,8 +22,8 @@ export function useDrizzle() {
   return { db, client }
 }
 
-export function useDrizzleToSeed() {
-  const url = process.env.NUXT_POSTGRES_URL
+export function useDrizzleToSeed(mode: string = 'production') {
+  const url = mode === 'test' ? process.env.NUXT_POSTGRES_TEST_URL : process.env.NUXT_POSTGRES_URL
 
   if (!url) {
     throw new Error('Missing NUXT_POSTGRES_URL')

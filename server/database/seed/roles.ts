@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { reset } from '../../utils/useDrizzle'
 import { roles } from '../schema/roles'
 
@@ -8,11 +9,15 @@ export async function seedRoles(db: any) {
     { name: 'Utilisateur', slug: 'user' },
   ]).onConflictDoNothing()
 
-  console.warn('✅ Roles seedé')
+  if (process.env.APP_ENV !== 'test') {
+    console.warn('✅ Roles seedé')
+  }
 }
 
 export async function resetRoles(db: any) {
   await reset(db, roles)
 
-  console.warn('✅ Roles reseté')
+  if (process.env.APP_ENV !== 'test') {
+    console.warn('✅ Roles reseté')
+  }
 }

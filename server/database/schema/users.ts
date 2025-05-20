@@ -22,7 +22,10 @@ export const usersRelations = relations(users, ({ one }) => ({
 }))
 
 export type InsertUser = typeof users.$inferInsert
-export type SelectUser = typeof users.$inferSelect
+export type SelectUser = typeof users.$inferSelect & {
+  createdAt: string | null
+  role: SelectRole
+}
 export type SelectSafeUser = Omit<SelectUser, 'password' | 'securityKey' | 'createdAt'> & {
   createdAt: string | null
   role: SelectRole

@@ -14,7 +14,7 @@ async function resetAll(db: any) {
 }
 
 async function main() {
-  const { db, client } = useDrizzleToSeed()
+  const { db, client } = useDrizzleToSeed('test')
 
   await resetAll(db)
 

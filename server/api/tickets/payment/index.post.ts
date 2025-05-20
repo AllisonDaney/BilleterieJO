@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!ticket) {
-      throw createError({ statusCode: 404, statusMessage: 'Ticket not found' })
+      throw createError({ statusCode: 404, message: 'Ticket not found' })
     }
 
     const user = await db.query.users.findFirst({
@@ -117,7 +117,7 @@ export default defineEventHandler(async (event) => {
 
     return { id: session.id }
   }
-  catch (err) {
-    console.log(err)
+  catch {
+    throw createError({ statusCode: 500, message: 'Internal server error' })
   }
 })

@@ -1,7 +1,9 @@
 import { eq } from 'drizzle-orm'
+import { defineEventHandler } from 'h3'
 import { users } from '~/server/database/schema/users'
+import { useDrizzle } from '~/server/utils/useDrizzle'
 
-export default eventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const { db, client } = useDrizzle()
 
   const user = await db.query.users.findFirst({
@@ -19,6 +21,13 @@ export default eventHandler(async (event) => {
       },
     },
   })
+
+  if (!user) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+    })
+  }
 
   event.waitUntil(client.end())
 

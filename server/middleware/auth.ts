@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
   if (!tokenStartWithBearer || !token) {
     return sendError(event, createError({
       statusCode: 401,
-      statusMessage: 'Unauthorized',
+      message: 'Unauthorized',
     }))
   }
 
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
   if (!isTokenValid) {
     return sendError(event, createError({
       statusCode: 401,
-      statusMessage: 'Unauthorized',
+      message: 'Unauthorized',
     }))
   }
 
@@ -46,14 +46,14 @@ export default defineEventHandler(async (event) => {
   if (!decodedToken) {
     return sendError(event, createError({
       statusCode: 401,
-      statusMessage: 'Unauthorized',
+      message: 'Unauthorized',
     }))
   }
 
   if (!allowedRoles.includes(decodedToken?.role as string)) {
     return sendError(event, createError({
       statusCode: 403,
-      statusMessage: 'Forbidden',
+      message: 'Forbidden',
     }))
   }
 

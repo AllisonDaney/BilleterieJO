@@ -41,7 +41,7 @@ async function handleClick(id: string) {
         sessionId: v?.id ?? '',
       })
     }
-    catch (error) {
+    catch {
       errorMessage.value = 'Une erreur est survenue lors de la réservation du billet'
     }
   }
