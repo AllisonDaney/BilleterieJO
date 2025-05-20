@@ -10,7 +10,7 @@ const links = ref([
     visible: ['user', undefined].includes(authStore.user?.role.slug),
   },
   {
-    label: 'Billeterie',
+    label: 'Billetterie',
     to: '/tickets',
     visible: ['user', undefined].includes(authStore.user?.role.slug),
   },
@@ -50,7 +50,7 @@ const logoLinkTo = computed(() => {
         <NuxtLink :to="logoLinkTo">
           <NuxtImg
             src="/img/logo.svg"
-            alt="Billeterie JO"
+            alt="Billetterie JO"
             height="40"
             class="h-[40px] transition-all ease-in-out duration-300"
           />

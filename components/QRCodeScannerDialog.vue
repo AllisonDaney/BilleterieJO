@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { breakpointsTailwind } from '@vueuse/core'
 import type { BarcodeFormat, DetectedBarcode } from 'vue-qrcode-reader'
+import { breakpointsTailwind } from '@vueuse/core'
 import { QrcodeStream } from 'vue-qrcode-reader'
 
 const constraints: MediaTrackConstraints = {
@@ -21,7 +21,7 @@ const result = reactive<{
   description: '',
   error: false,
 })
-const isReaderActive = ref(true) 
+const isReaderActive = ref(true)
 const isLoading = ref(false)
 const smallerThanSm = breakpoints.smaller('sm')
 
@@ -130,7 +130,7 @@ function resetScanner() {
         </p>
       </div>
       <div class="mt-auto sm:mt-6">
-        <UButton @click="resetScanner" :block="smallerThanSm">
+        <UButton :block="smallerThanSm" @click="resetScanner">
           Scanner un autre billet
         </UButton>
       </div>
