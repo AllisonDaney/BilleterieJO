@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@vueuse/nuxt',
     '@pinia/nuxt',
+    '@nuxt/test-utils/module',
   ],
 
   imports: {
@@ -57,6 +58,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     private: {
       NUXT_POSTGRES_URL: process.env.NUXT_POSTGRES_URL || '',
+      NUXT_POSTGRES_TEST_URL: process.env.NUXT_POSTGRES_TEST_URL || '',
       NUXT_JWT_SECRET: process.env.NUXT_JWT_SECRET || '',
       NUXT_STRIPE_SECRET_KEY: process.env.NUXT_STRIPE_SECRET_KEY || '',
       NUXT_BREVO_API_KEY: process.env.NUXT_BREVO_API_KEY || '',
