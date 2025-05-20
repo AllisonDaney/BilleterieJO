@@ -3,16 +3,12 @@ import type { TableColumn } from '@nuxt/ui'
 import type { SelectSafeUser } from '~/server/database/schema/users'
 import { useInfiniteScroll } from '@vueuse/core'
 
-const UAvatar = resolveComponent('UAvatar')
-
 interface UserResponse {
   users: SelectSafeUser[]
   total: number
   skip: number
   limit: number
 }
-
-const { scanQRCode } = useQRCode()
 
 const columns: TableColumn<SelectSafeUser>[] = [
   {
@@ -44,6 +40,9 @@ const { data, status, execute } = await useFetch(
   {
     key: 'table-users-infinite-scroll',
     params: { skip, limit, roleSlug: 'user' },
+    headers: {
+      Authorization: `Bearer ${useCookie('auth.token').value}`,
+    },
     transform: (data?: UserResponse) => {
       if (!initialTableHeightCalculation.value) {
         tableHeight.value = (tableContainer.value?.clientHeight || 100) - 40

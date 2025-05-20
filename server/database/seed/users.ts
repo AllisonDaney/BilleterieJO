@@ -1,11 +1,13 @@
 import crypto from 'node:crypto'
+import process from 'node:process'
 import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
 import { reset } from '../../utils/useDrizzle'
 import { roles } from '../schema/roles'
 import { users } from '../schema/users'
+import 'dotenv/config'
 
-export async function seedUsers(db: any) {
+export async function getTestUsers(db: any) {
   const roleAdmin = await db.query.roles.findFirst({
     where: eq(roles.slug, 'admin'),
   })
@@ -36,7 +38,7 @@ export async function seedUsers(db: any) {
     securityKey: crypto.randomUUID(),
   }))
 
-  await db.insert(users).values([
+  const resultSeedUsers = [
     {
       firstname: 'Admin',
       lastname: 'Admin',
@@ -62,13 +64,31 @@ export async function seedUsers(db: any) {
       securityKey: crypto.randomUUID(),
     },
     ...seedUsers,
-  ]).onConflictDoNothing()
+  ]
 
-  console.warn('✅ Users seedé')
+  return {
+    allUsers: resultSeedUsers,
+    userAdmin: resultSeedUsers.find(user => user.roleId === roleAdmin?.id),
+    userEmployee: resultSeedUsers.find(user => user.roleId === roleEmployee?.id),
+    userUser: resultSeedUsers.find(user => user.roleId === roleUser?.id),
+    notHashedPassword: 'passwordpasswordpassword',
+  }
+}
+
+export async function seedUsers(db: any) {
+  const { allUsers } = await getTestUsers(db)
+
+  await db.insert(users).values(allUsers).onConflictDoNothing()
+
+  if (process.env.APP_ENV !== 'test') {
+    console.warn('✅ Users seedé')
+  }
 }
 
 export async function resetUsers(db: any) {
   await reset(db, users)
 
-  console.warn('✅ Users reseté')
+  if (process.env.APP_ENV !== 'test') {
+    console.warn('✅ Users reseté')
+  }
 }

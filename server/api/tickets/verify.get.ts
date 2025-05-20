@@ -1,6 +1,8 @@
 import { and, eq } from 'drizzle-orm'
+import { defineEventHandler, getQuery } from 'h3'
 import * as jose from 'jose'
-import { usersTickets } from '~/server/database/schema/users_tickets'
+import { usersTickets } from '~~/server/database/schema/users_tickets'
+import { useDrizzle } from '~~/server/utils/useDrizzle'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
@@ -24,7 +26,8 @@ export default defineEventHandler(async (event) => {
   try {
     await jose.jwtVerify(token, secret)
     decodedToken = jose.decodeJwt(token) as typeof decodedToken
-  } catch (err) {
+  }
+  catch {
     return {
       message: 'Le ticket n’est pas valide',
       description: 'Le code fourni est incorrect ou a expiré.',

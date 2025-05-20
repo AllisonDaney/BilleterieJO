@@ -9,22 +9,10 @@ const { errorToast, successToast } = useCustomToast()
 const authStore = useAuthStore()
 const route = useRoute()
 
-const adminLogin = {
-  email: 'admin@example.com',
-  password: 'passwordpasswordpassword',
-}
-
-const employeeLogin = {
-  email: 'employee@example.com',
-  password: 'passwordpasswordpassword',
-}
-
-const userLogin = {
-  email: 'user@example.com',
-  password: 'passwordpasswordpassword',
-}
-
-const formState = reactive<SchemaSigninForm>(userLogin)
+const formState = reactive<SchemaSigninForm>({
+  email: '',
+  password: '',
+})
 const isLoadingForm = ref(false)
 
 async function handleSubmit() {
@@ -68,7 +56,7 @@ async function handleSubmit() {
     <NuxtLink to="/" class="mb-10">
       <NuxtImg
         src="/img/logo.svg"
-        alt="Billeterie JO"
+        alt="Billetterie JO"
         height="40"
         class="h-[40px] transition-all ease-in-out duration-300"
       />
@@ -85,11 +73,11 @@ async function handleSubmit() {
           <UFormField name="password" label="Mot de passe" size="xl" required>
             <UInput v-model="formState.password" class="w-full" type="password" placeholder="••••••••" />
           </UFormField>
-          <div class="flex items-center justify-end">
+          <!-- <div class="flex items-center justify-end">
             <NuxtLink to="/auth/forgot-password" class="text-sm font-medium text-primary-600 hover:underline">
               Mot de passe oublié ?
             </NuxtLink>
-          </div>
+          </div> -->
           <UButton type="submit" block size="xl" :loading="isLoadingForm">
             Se connecter
           </UButton>

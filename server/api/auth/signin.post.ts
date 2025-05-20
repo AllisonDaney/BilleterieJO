@@ -1,17 +1,19 @@
 import type { SelectUser } from '~~/server/database/schema/users'
 import type { SelectRole } from '~/server/database/schema/roles'
+import process from 'node:process'
 import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
+import { createError, defineEventHandler, readBody } from 'h3'
 import * as jose from 'jose'
 import { users } from '~~/server/database/schema/users'
+import { useDrizzle } from '~~/server/utils/useDrizzle'
 
 type AuthenticatedUser = SelectUser & {
   role: Pick<SelectRole, 'name' | 'slug'>
 }
 
-export default eventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const { db, client } = useDrizzle()
-  const config = useRuntimeConfig()
 
   const formState: SchemaSigninForm = await readBody(event)
 
@@ -32,17 +34,17 @@ export default eventHandler(async (event) => {
   if (!user || !isPasswordValid) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Information de connexion incorrecte.',
+      message: 'Information de connexion incorrecte.',
     })
   }
 
-  const secret = new TextEncoder().encode(config.private.NUXT_JWT_SECRET)
+  const secret = new TextEncoder().encode(process.env.NUXT_JWT_SECRET)
 
   const token = await new jose.SignJWT({ id: user.id, role: user.role.slug })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setIssuer('billeterie-jo')
-    .setAudience('api-billeterie-jo')
+    .setIssuer('billetterie-jo')
+    .setAudience('api-billetterie-jo')
     .setExpirationTime('1d')
     .sign(secret)
 
@@ -52,7 +54,7 @@ export default eventHandler(async (event) => {
 
   return {
     statusCode: 200,
-    statusMessage: 'Connexion réussie.',
+    message: 'Connexion réussie.',
     token,
     user: safeUser,
   }
