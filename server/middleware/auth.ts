@@ -13,7 +13,9 @@ export default defineEventHandler(async (event) => {
     'GET /api/tickets/verify': ['employee'],
   }
 
-  const routeKey = `${method.toUpperCase()} ${url}`
+  const urlWithoutQuery = url.split('?')[0]
+
+  const routeKey = `${method.toUpperCase()} ${urlWithoutQuery}`
 
   const allowedRoles = protectedRoutes[routeKey]
   if (!allowedRoles)

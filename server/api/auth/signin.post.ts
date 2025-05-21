@@ -1,6 +1,5 @@
 import type { SelectUser } from '~~/server/database/schema/users'
 import type { SelectRole } from '~/server/database/schema/roles'
-import process from 'node:process'
 import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
 import { createError, defineEventHandler, readBody } from 'h3'
@@ -14,6 +13,7 @@ type AuthenticatedUser = SelectUser & {
 
 export default defineEventHandler(async (event) => {
   const { db, client } = useDrizzle()
+  const config = useRuntimeConfig()
 
   const formState: SchemaSigninForm = await readBody(event)
 
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const secret = new TextEncoder().encode(process.env.NUXT_JWT_SECRET)
+  const secret = new TextEncoder().encode(config.private.NUXT_JWT_SECRET)
 
   const token = await new jose.SignJWT({ id: user.id, role: user.role.slug })
     .setProtectedHeader({ alg: 'HS256' })

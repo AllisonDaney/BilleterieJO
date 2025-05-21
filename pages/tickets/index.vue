@@ -49,15 +49,30 @@ async function handleClick(id: string) {
   isLoadingButton.value[id] = false
 }
 
-onMounted(() => {
-  const success = useRoute().query.success
-  const id = useRoute().query.id
-  const ticket = tickets.value?.find(ticket => ticket.id === id)
+onMounted(async () => {
+  const { success, ticketId, userId } = useRoute().query
 
   if (success) {
-    successMessage.value = `Billet ${ticket?.name} réservé avec succès`
+    try {
+      isLoadingButton.value[ticketId as string] = true
 
-    navigateTo('/tickets')
+      const v = await $fetchAuth('/api/tickets/payment/success', {
+        method: 'POST',
+        body: {
+          ticketId,
+          userId,
+        },
+      })
+
+      successMessage.value = v.message
+
+      navigateTo('/tickets')
+    }
+    catch (err) {
+      errorMessage.value = 'Une erreur est survenue lors de la réservation du billet'
+    } finally { 
+      isLoadingButton.value[ticketId as string] = false
+    }
   }
 })
 
