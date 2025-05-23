@@ -8,7 +8,7 @@
 - [5. Gestion des utilisateurs et des rôles](#5-gestion-des-utilisateurs-et-des-rôles)
 - [6. Stockage des tickets et QR codes](#6-stockage-des-tickets-et-qr-codes)
 - [7. Paiement et validation](#7-paiement-et-validation)
-- [8. Évolutions futures possibles](#8-évolutions-futures-possibles)
+- [8. Tests](#8-tests)
 
 ---
 
@@ -95,3 +95,30 @@ Chaque QR code contient une URL avec JWT encodant :
   "timestamp": 1710000000,
   "hash": "hash"
 }
+```
+
+## 7. Paiement et validation
+
+Le processus de paiement et de validation s’effectue ainsi :
+
+1. **Stripe** génère une session de paiement sécurisée.
+2. À la validation du paiement :
+   - Une **clé unique d’achat** est générée.
+   - Un **ticket** est créé en base de données (`usersTickets`).
+   - Un **QR code** contenant un JWT est généré et hébergé sur **Cloudinary**.
+   - Un **email de confirmation** est envoyé à l'utilisateur.
+3. Le jour de l’événement :
+   - L'utilisateur présente le QR code.
+   - L’employé le scanne via l’application.
+   - L’API vérifie :
+     - La **validité du JWT**
+     - La **correspondance entre les 2 clés** (compte + achat)
+     - Le champ **`isUsed`** pour éviter les réutilisations
+
+---
+
+## 8. Tests (uniquement pour l'usage école)
+
+Voir le fichier [`tests/mock.md`](tests/mock.md) pour :
+- Les identifiants de test (admin, employé, utilisateur)
+- Les variables d’environnement de production et de test
